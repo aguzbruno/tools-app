@@ -55,7 +55,31 @@ export async function PATCH(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   await dbConnect();
-  const { productId } = await req.json();
-  await ShoppingListProduct.findByIdAndDelete(productId);
-  return NextResponse.json({ message: 'Product deleted successfully' });
+  try {
+    const { productId } = await req.json();
+    if (!productId) {
+      return NextResponse.json({ message: 'Product ID is required' }, { status: 400 });
+    }
+
+    const deletedProduct = await ShoppingListProduct.findByIdAndDelete(productId);
+    if (deletedProduct) {
+      return NextResponse.json({ message: 'Product deleted successfully' });
+    } else {
+      return NextResponse.json({ message: 'Product not found' }, { status: 404 });
+    }
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function DELETE_ALL() {
+  await dbConnect();
+  try {
+    await ShoppingListProduct.deleteMany({});
+    return NextResponse.json({ message: 'All products deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting all products:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  }
 }

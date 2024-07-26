@@ -72,7 +72,7 @@ export default function ShopProduct({ product }: ShopProductProps) {
               handleTogglePurchaseStatus(product._id);
             }}
           >
-            <Image height={25} width={25} src={Clip} alt="Agregar" />
+            <Image className="cursor-pointer"  height={25} width={25} src={Clip} alt="Agregar" />
           </button>
         ) : (
           <button
@@ -80,7 +80,7 @@ export default function ShopProduct({ product }: ShopProductProps) {
               handleTogglePurchaseStatus(product._id);
             }}
           >
-            <Image src={ClipCheck} height={25} width={25} alt="sacar"></Image>
+            <Image className="cursor-pointer"  src={ClipCheck} height={25} width={25} alt="sacar"></Image>
           </button>
         )}
 
@@ -88,6 +88,7 @@ export default function ShopProduct({ product }: ShopProductProps) {
           src={DeleteIcon}
           height={25}
           width={25}
+          className="cursor-pointer" 
           onClick={() => handleRemoveFromShoppingList(product._id)}
           alt="Eliminar"
         ></Image>

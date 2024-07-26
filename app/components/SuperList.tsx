@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSuperStore } from "../store/superStore";
 import Link from "next/link";
 import {
+  clearShoppingList,
   getProducts,
   getShoppingList,
   removeFromShoppingList
@@ -10,6 +11,8 @@ import {
 import { Product,ShoppingListProduct } from "../services/types";
 import ProductCard from "./ProductCard";
 import ShopProduct from "./ShoppProduct";
+import Bomb from '../assets/bomb.svg'
+import Image from "next/image";
 
 const SuperList = () => {
   const products = useSuperStore((state) => state.products);
@@ -17,6 +20,15 @@ const SuperList = () => {
   const setProducts = useSuperStore((state) => state.setProducts);
   const setShoppingList = useSuperStore((state) => state.setShoppingList);
 
+  const handleClearShoppingList = async () => {
+    try {
+      await clearShoppingList();
+      const updatedShoppingList = await getShoppingList();
+      setShoppingList(updatedShoppingList);
+    } catch (error) {
+      console.error('Error clearing shopping list:', error);
+    }
+  };
   const fetchProducts = async () => {
     try {
       const products = await getProducts();
@@ -51,9 +63,14 @@ const SuperList = () => {
       
 
       <div className="mb-6">
-        <p className="text-xs font-bold text-gray-300 mb-4" style={{color:"C4C4C4"}}>
+        <div className="flex flex-row justify-between items-center mb-4">
+        <p className="text-xs font-bold text-gray-300 " style={{color:"C4C4C4"}}>
          LISTA DEL SUPER
         </p>
+        
+          <Image onClick={handleClearShoppingList} className="cursor-pointer" src={Bomb} alt="vaciar" width={20} height={20} />
+          </div>
+        
         <ul className="space-y-2">
           {shoppingList?.length > 0 ?
             (shoppingList.map((product:ShoppingListProduct) => (

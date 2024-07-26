@@ -98,3 +98,12 @@ export const togglePurchaseStatus = async (productId: string) => {
   }
 };
 
+export async function clearShoppingList() {
+  try {
+    const response = await axios.delete('/api/shopping-list/clear');
+    return response.data;
+  } catch (error) {
+    console.error('Error clearing shopping list:', error);
+    throw error;
+  }
+}

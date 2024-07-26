@@ -47,7 +47,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <li
       key={product._id}
-      className={`px-3 ${"bg-white-300"} w-5/5 rounded-md shadow-md flex justify-between items-center`}
+      className={`px-3 ${!isProductInShoppingList(product._id) ? "bg-white-300":"bg-gray-300"} w-5/5 rounded-md shadow-md flex justify-between items-center`}
       style={{ border: " 1px solid #E3E3E3", borderRadius: "11px" }}
     >
       <div className="flex flex-col">
@@ -62,9 +62,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             >
               {product.name}
             </span>
+            {!isProductInShoppingList(product._id) &&(
             <span className="text-xs font-semibold text-gray-300">
               {product.quantity}
-            </span>
+            </span>)}
           </div>
 
           {product.price !== undefined && (
