@@ -48,8 +48,28 @@ const SuperList = () => {
   };
 
  
+  const groupByCategory = (products: Product[]) => {
+    return products.reduce((acc, product) => {
+      const category = product.category || 'Otros';
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(product);
+      return acc;
+    }, {} as Record<string, Product[]>);
+  };
+  const groupedProducts = groupByCategory(products);
+  const { Otros, ...restCategories } = groupedProducts;
+   // Estado para manejar las categorías abiertas
+   const [openCategories, setOpenCategories] = useState<{ [key: string]: boolean }>({});
 
-
+   // Función para alternar la apertura/cierre de una categoría
+   const toggleCategory = (category: string) => {
+     setOpenCategories((prevState) => ({
+       ...prevState,
+       [category]: !prevState[category],
+     }));
+   };
 
 
   
@@ -93,11 +113,48 @@ const SuperList = () => {
 
         </div>
         <ul className="space-y-2">
-          {products.length > 0 &&
-            products?.map((product) => (
-             <ProductCard product={product} key={product._id} />
-            ))}
-        </ul>
+        {Object.keys(restCategories).map((category) => {
+           const productsInCategory = restCategories[category];
+           const totalProducts = productsInCategory.length;
+ 
+           // Contar cuántos productos de esta categoría están en la lista de compras
+           const purchasedProducts = productsInCategory.filter((product) => 
+             shoppingList.some((shoppingItem) => shoppingItem._id === product._id)
+           ).length;
+           
+          return(<li key={category}>
+            <div className="flex justify-between items-center">
+            <div className="flex flex-row cursor-pointer mb-2" onClick={() => toggleCategory(category)} style={{ userSelect: 'none' }}>
+            <h3 className="font-bold category-header " >{category}</h3> - ({purchasedProducts}/{totalProducts})
+                </div>
+              
+             
+            </div>
+            {openCategories[category] && (
+              <ul className="flex flex-col product-list gap-2">
+                {restCategories[category].map((product) => (
+                  <ProductCard product={product} key={product._id} />
+                ))}
+              </ul>
+            )}
+          </li>)
+          }
+        )}
+        {Otros && (
+          <li key="Otros">
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold category-header cursor-pointer"  onClick={() => toggleCategory('Otros')}>Otros</h3>
+            </div>
+            {openCategories['Otros'] && (
+              <ul className="flex flex-col product-list gap-2">
+                {Otros.map((product) => (
+                  <ProductCard product={product} key={product._id} />
+                ))}
+              </ul>
+            )}
+          </li>
+        )}
+      </ul>
       </div>
     </div>
   );

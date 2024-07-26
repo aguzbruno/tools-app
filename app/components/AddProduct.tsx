@@ -18,6 +18,7 @@ const AddProduct = () => {
         name,
         quantity,
         price: price,
+        category:category
       });
       router.push('/super');
     } catch (error) {
@@ -66,11 +67,11 @@ const AddProduct = () => {
           <option value='Fruta'>Fruta</option>
           <option value='Verdura'>Verdura</option>
           <option value='Heladera'>Heladera</option>
-          <option value='carnes'>Carnes</option>
-          <option value='limpieza'>Limpieza</option>
-          <option value='higiene'>Higiene Personal</option>
-          <option value='droga'>Droga</option>
-          <option value='otros'>Otros</option>
+          <option value='Carnes'>Carnes</option>
+          <option value='Limpieza'>Limpieza</option>
+          <option value='Higiene'>Higiene Personal</option>
+          <option value='Droga'>Droga</option>
+          <option value='Otros'>Otros</option>
         </select>
 
       </div>
