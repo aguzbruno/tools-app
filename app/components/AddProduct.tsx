@@ -7,6 +7,7 @@ const AddProduct = () => {
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState<number | undefined>(undefined);
+  const [category, setCategory] = useState<string | undefined>(undefined);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,6 +51,28 @@ const AddProduct = () => {
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
+      </div>
+      <div className='mb-4'>
+        <label htmlFor="category" className="block text-lg font-medium text-gray-700">Categoría (opcional)</label>
+        <select
+          id="category"
+          value={category || ''}
+          onChange={(e) => setCategory(e.target.value)}
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value=''>Selecciona una categoría</option>
+          <option value='Alacena'>Alacena</option>
+          <option value='Congelados'>Congelados</option>
+          <option value='Fruta'>Fruta</option>
+          <option value='Verdura'>Verdura</option>
+          <option value='Heladera'>Heladera</option>
+          <option value='carnes'>Carnes</option>
+          <option value='limpieza'>Limpieza</option>
+          <option value='higiene'>Higiene Personal</option>
+          <option value='droga'>Droga</option>
+          <option value='otros'>Otros</option>
+        </select>
+
       </div>
       <div className="mb-4">
         <label htmlFor="price" className="block text-lg font-medium text-gray-700">Precio (opcional)</label>

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Product, ShoppingListProduct } from './types';
 
 const api = axios.create({
   baseURL: '/api', // Asegúrate de que esta URL coincida con la configuración de tu API
@@ -65,11 +66,9 @@ export const getShoppingList = async () => {
   }
 };
 
-export const addToShoppingList = async (productId: string) => {
+export const addToShoppingList = async (product: Product | ShoppingListProduct) => {
   try {
-    console.log(productId)
-    const response = await api.post('/shopping-list', { productId });
-    console.log(productId,response)
+    const response = await api.post('/shopping-list', { product });
     return response.data;
   } catch (error) {
     console.error('Error adding to shopping list:', error);
@@ -86,3 +85,16 @@ export const removeFromShoppingList = async (productId: string) => {
     throw error;
   }
 };
+// services/superService.ts
+
+
+export const togglePurchaseStatus = async (productId: string) => {
+  try {
+    const response = await api.patch('/shopping-list', { productId });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating purchase status:', error);
+    throw error;
+  }
+};
+

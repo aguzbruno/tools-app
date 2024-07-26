@@ -1,11 +1,12 @@
-'use client'
+"use client";
 import { useState } from "react";
-import { Product } from "../services/types"
+import { Product } from "../services/types";
 import { useSuperStore } from "../store/superStore";
 import {
   addToShoppingList,
   deleteProduct,
   getProducts,
+  getShoppingList,
 } from "../services/superService";
 
 interface ProductCardProps {
@@ -19,13 +20,15 @@ export default function ProductCard({ product }: ProductCardProps) {
   const setShoppingList = useSuperStore((state) => state.setShoppingList);
 
   const isProductInShoppingList = (productId: string) => {
-    return shoppingList.some((p) => p._id === productId);
+    return shoppingList?.some((p) => p._id === productId);
   };
 
   const handleAddToShoppingList = async (product: Product) => {
     try {
-      const updatedShoppingList = await addToShoppingList(product._id);
-      setShoppingList(updatedShoppingList.data);
+      const newProduct = { ...product, isPurchased: false };
+      await addToShoppingList(newProduct);
+      const updatedShoppingList = await getShoppingList();
+      setShoppingList(updatedShoppingList);
     } catch (error) {
       console.error("Error adding to shopping list:", error);
     }
@@ -33,9 +36,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const handleRemoveProduct = async (productId: string) => {
     try {
-      const updateProducts = await deleteProduct(productId);
+      await deleteProduct(productId);
       const products = await getProducts();
-      setProducts(products)
+      setProducts(products);
     } catch (error) {
       console.error("Error removing from shopping list:", error);
     }
@@ -44,16 +47,26 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <li
       key={product._id}
-      className="px-3 bg-gray-800 rounded-md shadow-md flex justify-between items-center"
+      className={`px-3 ${"bg-white-300"} w-5/5 rounded-md shadow-md flex justify-between items-center`}
+      style={{ border: " 1px solid #E3E3E3", borderRadius: "11px" }}
     >
       <div className="flex flex-col">
         <div className="flex flex-row items-center justify-center gap-4">
-          <span className="text-lg font-semibold text-blue-400" onClick={() => { setShowAll(!showAll) }}>
-            {product.name}
-          </span>
-          <span className="text-lg font-semibold text-white">
-            {product.quantity}
-          </span>
+          <div className="flex flex-col py-1">
+            <span
+              className={`text-lg font-semibold`}
+              style={{ color: "#009456" }}
+              onClick={() => {
+                setShowAll(!showAll);
+              }}
+            >
+              {product.name}
+            </span>
+            <span className="text-xs font-semibold text-gray-300">
+              {product.quantity}
+            </span>
+          </div>
+
           {product.price !== undefined && (
             <span className="text-lg font-semibold text-white">
               EUR$ {product.price.toFixed(2)}
@@ -62,9 +75,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
         {showAll && (
           <div className="flex flex-row justify-between">
-            <div>
-              Editar
-            </div>
+            <div>Editar</div>
             <div>
               <button
                 onClick={() => handleRemoveProduct(product._id)}
@@ -76,16 +87,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
       </div>
-      {!isProductInShoppingList(product._id) ? (
+      {isProductInShoppingList(product._id) ? (
+        <label className="text-black">Agregado</label>
+      ) : (
         <button
           onClick={() => handleAddToShoppingList(product)}
           className={`m-2 h-6 w-6 bg-green-800 text-white rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300`}
-          disabled={isProductInShoppingList(product._id)}
         >
           +
         </button>
-      ) : (
-        <label className="text-sm">Agregado</label>
       )}
     </li>
   );
