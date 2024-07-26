@@ -5,7 +5,7 @@ export interface Product {
     quantity: string;
     price?: number;
   }
-  
+   
   export interface ApiResponse<T> {
     success: boolean;
     data: T;
