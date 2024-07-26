@@ -73,13 +73,3 @@ export async function DELETE(req: NextRequest) {
   }
 }
 
-export async function DELETE_ALL() {
-  await dbConnect();
-  try {
-    await ShoppingListProduct.deleteMany({});
-    return NextResponse.json({ message: 'All products deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting all products:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
-  }
-}
