@@ -3,10 +3,10 @@ import dbConnect from '../../lib/mongoose';
 import Product from '../../models/Product';
 
 // GET request handler
-export async function GET(req: NextRequest,context:any) {
+export async function GET(req: NextRequest, context: any) {
   await dbConnect();
   const { params } = context;
-  const {id} = params;
+  const { id } = params;
 
   try {
     const product = await Product.findById(id);
@@ -15,15 +15,15 @@ export async function GET(req: NextRequest,context:any) {
     }
     return NextResponse.json({ success: true, data: product });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 400 });
+    return NextResponse.json({ success: false, error: (error as Error).message }, { status: 400 });
   }
 }
 
 // PUT request handler
-export async function PUT(req: NextRequest,context:any) {
+export async function PUT(req: NextRequest, context: any) {
   await dbConnect();
   const { params } = context;
-  const {id} = params;
+  const { id } = params;
   const body = await req.json();
 
   try {
@@ -36,15 +36,19 @@ export async function PUT(req: NextRequest,context:any) {
     }
     return NextResponse.json({ success: true, data: product });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 400 });
+    if (error instanceof Error) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 400 });
+    }
+    return NextResponse.json({ success: false, error: 'An unknown error occurred' }, { status: 400 });
   }
 }
 
 // DELETE request handler
-export async function DELETE(req: NextRequest,context:any) {
+export async function DELETE(req: NextRequest, context: any) {
   await dbConnect();
   const { params } = context;
-  const {id} = params;
+  const { id } = params;
+  
   try {
     const deletedProduct = await Product.deleteOne({ _id: id });
     if (!deletedProduct.deletedCount) {
@@ -52,6 +56,9 @@ export async function DELETE(req: NextRequest,context:any) {
     }
     return NextResponse.json({ success: true, data: {} });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 400 });
+    if (error instanceof Error) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 400 });
+    }
+    return NextResponse.json({ success: false, error: 'An unknown error occurred' }, { status: 400 });
   }
 }
