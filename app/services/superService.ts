@@ -107,3 +107,14 @@ export async function clearShoppingList() {
     throw error;
   }
 }
+// service para obtener los detalles de los productos
+export const getProductDetails = async (productIds: string[]) => {
+  const response = await fetch('/api/products', { // Cambia esto según tu endpoint
+    method: 'POST',
+    body: JSON.stringify({ ids: productIds }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.json();
+};

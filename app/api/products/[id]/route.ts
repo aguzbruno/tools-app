@@ -1,12 +1,13 @@
-'use client'
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '../../lib/mongoose'
-import Product from '../../models/Product'
-import { useParams } from 'next/navigation';
+import dbConnect from '../../lib/mongoose';
+import Product from '../../models/Product';
 
-export async function GET(req: NextRequest) {
+// GET request handler
+export async function GET(req: NextRequest,context:any) {
   await dbConnect();
-  const id = '66a354ac836c92be598ddbe3'
+  const { params } = context;
+  const {id} = params;
+
   try {
     const product = await Product.findById(id);
     if (!product) {
@@ -14,14 +15,17 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json({ success: true, data: product });
   } catch (error) {
-    return NextResponse.json({ success: false, error }, { status: 400 });
+    return NextResponse.json({ success: false, error: error.message }, { status: 400 });
   }
 }
 
-export async function PUT(req: NextRequest) {
+// PUT request handler
+export async function PUT(req: NextRequest,context:any) {
   await dbConnect();
-  const { id } = useParams();
+  const { params } = context;
+  const {id} = params;
   const body = await req.json();
+
   try {
     const product = await Product.findByIdAndUpdate(id, body, {
       new: true,
@@ -32,13 +36,15 @@ export async function PUT(req: NextRequest) {
     }
     return NextResponse.json({ success: true, data: product });
   } catch (error) {
-    return NextResponse.json({ success: false, error }, { status: 400 });
+    return NextResponse.json({ success: false, error: error.message }, { status: 400 });
   }
 }
 
-export async function DELETE(req: NextRequest) {
+// DELETE request handler
+export async function DELETE(req: NextRequest,context:any) {
   await dbConnect();
-  const { id } = useParams();
+  const { params } = context;
+  const {id} = params;
   try {
     const deletedProduct = await Product.deleteOne({ _id: id });
     if (!deletedProduct.deletedCount) {
@@ -46,6 +52,6 @@ export async function DELETE(req: NextRequest) {
     }
     return NextResponse.json({ success: true, data: {} });
   } catch (error) {
-    return NextResponse.json({ success: false, error }, { status: 400 });
+    return NextResponse.json({ success: false, error: error.message }, { status: 400 });
   }
 }

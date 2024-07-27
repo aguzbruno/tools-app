@@ -9,10 +9,9 @@ import {
   removeFromShoppingList
 } from "../services/superService";
 import { Product,ShoppingListProduct } from "../services/types";
-import ProductCard from "./ProductCard";
-import ShopProduct from "./ShoppProduct";
 import Bomb from '../assets/bomb.svg'
 import Image from "next/image";
+import ProductCardDetail from "./ProductCardDetail";
 
 const SuperList = () => {
   const products = useSuperStore((state) => state.products);
@@ -94,7 +93,7 @@ const SuperList = () => {
         <ul className="space-y-2">
           {shoppingList?.length > 0 ?
             (shoppingList.map((product:ShoppingListProduct) => (
-              <ShopProduct product={product} key={product._id} />
+              <ProductCardDetail  isShoppingList={true} product={product} key={product._id} />
             ))):(<label className="text-sm text-black">No hay productos en la lista</label>)}
         </ul>
       </div>
@@ -133,7 +132,7 @@ const SuperList = () => {
             {openCategories[category] && (
               <ul className="flex flex-col product-list gap-2">
                 {restCategories[category].map((product) => (
-                  <ProductCard product={product} key={product._id} />
+                  <ProductCardDetail product={product} key={product._id} />
                 ))}
               </ul>
             )}
@@ -148,7 +147,7 @@ const SuperList = () => {
             {openCategories['Otros'] && (
               <ul className="flex flex-col product-list gap-2">
                 {Otros.map((product) => (
-                  <ProductCard product={product} key={product._id} />
+                  <ProductCardDetail product={product} key={product._id} />
                 ))}
               </ul>
             )}
