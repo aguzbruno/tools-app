@@ -15,3 +15,8 @@ export interface Product {
   export interface ShoppingListProduct extends Product {
     isPurchased: boolean;
   }
+  export interface IShoppingHistory {
+    _id: string;
+    products: Product[];
+    timestamp: string;
+  }

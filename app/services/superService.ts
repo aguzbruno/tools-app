@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Product, ShoppingListProduct } from './types';
+import { IShoppingHistory, Product, ShoppingListProduct } from './types';
 
 const api = axios.create({
   baseURL: '/api', // Asegúrate de que esta URL coincida con la configuración de tu API
@@ -117,4 +117,46 @@ export const getProductDetails = async (productIds: string[]) => {
     },
   });
   return response.json();
+};
+// superServices.ts
+export const saveShoppingHistory = async (products: Product[]): Promise<void> => {
+  try {
+    const productIds = products.map(product => product._id);
+    const response = await fetch('/api/shopping-history', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ products: productIds }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error saving shopping history');
+    }
+
+    const result = await response.json();
+    console.log('Shopping history saved:', result);
+  } catch (error) {
+    console.error((error as Error).message);
+  }
+};
+export const getShoppingHistory = async (): Promise<IShoppingHistory[]> => {
+  try {
+    const response = await fetch('/api/shopping-history', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch shopping history');
+    }
+
+    const data = await response.json();
+    return data.data as IShoppingHistory[];
+  } catch (error) {
+    console.error('Error fetching shopping history:', error);
+    return [];
+  }
 };

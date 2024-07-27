@@ -6,19 +6,23 @@ import {
   clearShoppingList,
   getProducts,
   getShoppingList,
-  removeFromShoppingList
+  removeFromShoppingList,
+  saveShoppingHistory
 } from "../services/superService";
 import { Product,ShoppingListProduct } from "../services/types";
 import Bomb from '../assets/bomb.svg'
 import Image from "next/image";
 import ProductCardDetail from "./ProductCardDetail";
-
+import Save from '../assets/save.svg'
 const SuperList = () => {
   const products = useSuperStore((state) => state.products);
   const shoppingList = useSuperStore((state) => state.shoppingList);
   const setProducts = useSuperStore((state) => state.setProducts);
   const setShoppingList = useSuperStore((state) => state.setShoppingList);
 
+  const handleSaveHistory = async () => {
+    await saveShoppingHistory(shoppingList);
+  };
   const handleClearShoppingList = async () => {
     try {
       await clearShoppingList();
@@ -58,6 +62,8 @@ const SuperList = () => {
     }, {} as Record<string, Product[]>);
   };
   const groupedProducts = groupByCategory(products);
+  const groupedShopProducts = groupByCategory(shoppingList);
+  const { OtrosShopp, ...restCategoriesShopp } = groupedShopProducts;
   const { Otros, ...restCategories } = groupedProducts;
    // Estado para manejar las categorías abiertas
    const [openCategories, setOpenCategories] = useState<{ [key: string]: boolean }>({});
@@ -83,18 +89,60 @@ const SuperList = () => {
 
       <div className="mb-6">
         <div className="flex flex-row justify-between items-center mb-4">
+          <div className="flex flex-col">
         <p className="text-xs font-bold text-gray-300 " style={{color:"C4C4C4"}}>
          LISTA DEL SUPER
         </p>
-        
+        <div className="flex items-center gap-2">
+        <p className="text-md font-bold text-gray-500 " style={{color:"C4C4C4"}}>
+         ESTIMADO :</p> €{shoppingList.reduce((acc, product) => acc + (product.price || 0), 0).toFixed(2)}
+         </div>
+        </div>
+        <div className="flex gap-3">
+        <Image
+             onClick={() => handleSaveHistory()}
+            className="cursor-pointer"
+            height={20}
+            width={20}
+            src={Save}
+            alt="Guardar"
+          />
           <Image onClick={handleClearShoppingList} className="cursor-pointer" src={Bomb} alt="vaciar" width={20} height={20} />
+          </div>
           </div>
         
         <ul className="space-y-2">
-          {shoppingList?.length > 0 ?
+        {Object.keys(restCategoriesShopp).map((category) => {
+           const productsInCategory = restCategoriesShopp[category];
+           const totalProducts = productsInCategory.length;
+ 
+           // Contar cuántos productos de esta categoría están en la lista de compras
+           const purchasedProducts = productsInCategory.filter((product) => 
+             shoppingList.some((shoppingItem) => shoppingItem._id === product._id)
+           ).length;
+           
+          return(<li key={category}>
+            <div className="flex justify-between items-center">
+            <div className="flex flex-row cursor-pointer" style={{ userSelect: 'none' }}>
+            <h3 className="font-bold category-header text-xs  " >{category}</h3>
+                </div>
+              
+             
+            </div>
+
+              <ul className="flex flex-col product-list gap-2">
+                {restCategoriesShopp[category]?.map((product) => (
+                  <ProductCardDetail product={product} key={product._id} isShoppingList={true} />
+                ))}
+              </ul>
+            
+          </li>)
+          }
+        )}
+          {/* {shoppingList?.length > 0 ?
             (shoppingList.map((product:ShoppingListProduct) => (
               <ProductCardDetail  isShoppingList={true} product={product} key={product._id} />
-            ))):(<label className="text-sm text-black">No hay productos en la lista</label>)}
+            ))):(<label className="text-sm text-black">No hay productos en la lista</label>)} */}
         </ul>
       </div>
 
