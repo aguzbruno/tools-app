@@ -1,7 +1,7 @@
 {
-    "name": "Tu Nombre de Aplicación",
-    "short_name": "Nombre Corto",
-    "description": "Descripción de tu aplicación",
+    "name": "My Tools",
+    "short_name": "MT",
+    "description": "Todas tus herramientas en un solo lugar",
     "icons": [
       {
         "src": "/icon-192x192.png",
