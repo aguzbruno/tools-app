@@ -14,7 +14,7 @@ export default function Navbar() {
 
   const tabs = [
     { title: 'Schedule', path: '/' },
-    { title: 'BUS', path: '/schedule' },
+    { title: 'BUS', path: '/bus' },
     { title: 'Super', path: '/super' },
     { title: 'Recetas', path: '/recipes' },
     { title: 'Perfil', path: '/profile' },
