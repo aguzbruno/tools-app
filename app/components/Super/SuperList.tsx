@@ -95,7 +95,8 @@ const SuperList = () => {
         </p>
         <div className="flex items-center gap-2">
         <p className="text-md font-bold text-gray-500 " style={{color:"C4C4C4"}}>
-         ESTIMADO :</p> €{shoppingList.reduce((acc, product) => acc + (product.price || 0), 0).toFixed(2)}
+        ESTIMADO :</p> €{shoppingList.reduce((acc, product) => acc + (product.price || 0) * (product.amount ? Number(product.amount) : 1), 0).toFixed(2)}
+
          </div>
         </div>
         <div className="flex gap-3">
