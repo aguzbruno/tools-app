@@ -185,10 +185,10 @@ const Schedule = () => {
                   {String(countdownPorto % 60).padStart(2, "0")} minutos restantes)
                 </div>
                 <p className="my-2">Horarios:</p>
-                <div className="flex p-2 gap-3 justify-start flex-wrap ">
+                <div className="flex justify-start flex-wrap ">
                   {busSchedules.Casa.toPorto.map((time, index) => (
                     <p
-                      className={`w-1/6 text-center p-1 rounded-full  text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
+                      className={`w-1/6 mb-3 ml-1 text-center rounded-full  p-2  text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
                       key={index}
                     >
                       {time}
@@ -208,10 +208,10 @@ const Schedule = () => {
                   {String(countdownOlbia % 60).padStart(2, "0")} minutos restantes)
                 </div>
                 <p className="my-2">Horarios:</p>
-                <div className="flex p-2 gap-3 justify-start flex-wrap ">
+                <div className="flex justify-start flex-wrap ">
                   {busSchedules.Casa.toOlbia.map((time, index) => (
                     <p
-                      className={`w-1/6 text-center p-1 rounded-full text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
+                      className={`w-1/6 mb-3 ml-1 text-center  p-2 rounded-full text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
                       key={index}
                     >
                       {time}
@@ -240,10 +240,10 @@ const Schedule = () => {
         {activeTab !== "Casa" && (
           <div className=" w-full flex flex-col">
             <p className="my-2 font-bold">Horarios:</p>
-            <div className="flex p-2 gap-3 justify-start flex-wrap ">
+            <div className="flex justify-start flex-wrap ">
               {schedule.map((time, index) => (
                 <p
-                  className={`w-1/6 text-center p-1 rounded-full text-white  bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
+                  className={`w-1/6 mb-3 ml-1  text-center  p-2 rounded-full text-white  bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
                   key={index}
                 >
                   {time}
