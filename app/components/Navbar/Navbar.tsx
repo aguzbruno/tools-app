@@ -1,16 +1,11 @@
-// Navbar.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Tab from './Tab';
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
-  const [activeTab, setActiveTab] = useState(0);
   const router = useRouter();
-
-  const handleTabClick = (index: number, path: string) => {
-    setActiveTab(index);
-    router.push(path);
-  };
+  const [activeTab, setActiveTab] = useState<number | null>(null);
 
   const tabs = [
     { title: 'Schedule', path: '/' },
@@ -19,6 +14,24 @@ export default function Navbar() {
     { title: 'Recetas', path: '/recipes' },
     { title: 'Perfil', path: '/profile' },
   ];
+  const routerPath = usePathname();
+  useEffect(() => {
+    // Obtener la ruta actual desde el router
+    const currentPath = routerPath
+
+    // Encontrar el índice de la pestaña correspondiente a la ruta actual
+    const currentTabIndex = tabs.findIndex(tab => tab.path === currentPath);
+
+    // Establecer la pestaña activa si se encuentra una coincidencia
+    if (currentTabIndex !== -1) {
+      setActiveTab(currentTabIndex);
+    }
+  }, [routerPath]); // Reejecutar el efecto cuando cambie la ruta
+
+  const handleTabClick = (index: number, path: string) => {
+    setActiveTab(index);
+    router.push(path);
+  };
 
   return (
     <div className="h-16 border-t-2 w-full fixed bottom-0 bg-white flex flex-row justify-around items-center">
