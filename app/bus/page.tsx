@@ -175,7 +175,7 @@ const Schedule = () => {
         {activeTab === "Casa" && (
           <>
             {nextBusPorto && (
-              <div className="font-bold mb-2">
+              <div className="font-bold mb-2  w-full">
                 Próximo bus de Casa a Porto:{" "}
                 <div className="flex items-center gap-5 justify-center">
                   <p className="font-bold text-blue-600 text-4xl my-2 bg-blue-200 p-2 rounded-md">
@@ -185,7 +185,7 @@ const Schedule = () => {
                   {String(countdownPorto % 60).padStart(2, "0")} minutos restantes)
                 </div>
                 <p className="my-2">Horarios:</p>
-                <div className="flex gap-3 justify-start flex-wrap ">
+                <div className="flex p-2 gap-3 justify-start flex-wrap ">
                   {busSchedules.Casa.toPorto.map((time, index) => (
                     <p
                       className={`w-1/6 text-center p-1 rounded-full  text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
@@ -198,7 +198,7 @@ const Schedule = () => {
               </div>
             )}
             {nextBusOlbia && (
-              <div className="font-bold mb-2 ">
+              <div className="font-bold mb-2 w-full">
                 Próximo bus de Casa a Olbia:{" "}
                 <div className="flex items-center gap-5 justify-center">
                   <p className="font-bold text-green-600 text-4xl my-2 bg-green-200 p-2 rounded-md">
@@ -208,7 +208,7 @@ const Schedule = () => {
                   {String(countdownOlbia % 60).padStart(2, "0")} minutos restantes)
                 </div>
                 <p className="my-2">Horarios:</p>
-                <div className="flex gap-3 justify-start flex-wrap ">
+                <div className="flex p-2 gap-3 justify-start flex-wrap ">
                   {busSchedules.Casa.toOlbia.map((time, index) => (
                     <p
                       className={`w-1/6 text-center p-1 rounded-full text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
@@ -238,9 +238,9 @@ const Schedule = () => {
             </div>
           )}
         {activeTab !== "Casa" && (
-          <div>
+          <div className=" w-full flex flex-col">
             <p className="my-2 font-bold">Horarios:</p>
-            <div className="flex gap-3 justify-start flex-wrap ">
+            <div className="flex p-2 gap-3 justify-start flex-wrap ">
               {schedule.map((time, index) => (
                 <p
                   className={`w-1/6 text-center p-1 rounded-full text-white  bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
