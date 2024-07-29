@@ -1,5 +1,5 @@
 // pages/recipes/add.tsx
-import AddRecipe from '../../components/AddRecipe';
+import AddRecipe from '@/app/components/Recipes/AddRecipe';
 import Header from '../../components/Header';
 
 const AddRecipePage = () => {
