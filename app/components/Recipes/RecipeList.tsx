@@ -1,9 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getRecipes } from '../services/recipe';
-import { useDarkMode } from '../store/darkMode';
+import { getRecipes } from '../../services/recipe';
+import { useDarkMode } from '../../store/darkMode';
 // components/RecipeList.tsx
-import { useRecipeStore } from '../store/recipeStore';
+import { useRecipeStore } from '../../store/recipeStore';
 import Link from 'next/link';
 
 const RecipeList = () => {

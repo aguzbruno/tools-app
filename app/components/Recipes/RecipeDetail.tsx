@@ -1,5 +1,5 @@
 'use client';
-import { useRecipeStore } from '../store/recipeStore';
+import { useRecipeStore } from '../../store/recipeStore';
 import { useParams } from 'next/navigation';
 
 const RecipeDetail = () => {

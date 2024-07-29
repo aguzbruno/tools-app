@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { useRecipeStore } from '../store/recipeStore';
+import { useRecipeStore } from '../../store/recipeStore';
 import { useRouter } from 'next/navigation';
-import { useDarkMode } from '../store/darkMode';
-import { createRecipe } from '../services/recipe';
+import { useDarkMode } from '../../store/darkMode';
+import { createRecipe } from '../../services/recipe';
 
 const AddRecipe = () => {
     const [title, setTitle] = useState('');
