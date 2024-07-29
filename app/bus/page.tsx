@@ -103,7 +103,9 @@ const Schedule = () => {
     const busTime = hours * 60 + minutes;
     return busTime <= currentTime;
   };
-
+  const now = new Date();
+  const currentTime = now.getHours() * 60 + now.getMinutes(); // En minutos
+  const schedule = getActiveSchedule();
   useEffect(() => {
     const updateNextBus = () => {
       const now = new Date();
@@ -215,6 +217,7 @@ const Schedule = () => {
     const schedule = getActiveSchedule();
     return (
       <div className="flex flex-col px-10 mt-5">
+        {now.getDay()}
         {activeTab === "Casa" && (
           <>
             {nextBusPorto && (
@@ -232,7 +235,7 @@ const Schedule = () => {
                 <div className="flex gap-3 justify-start flex-wrap ">
                   {busSchedules.Casa.toPorto.map((time, index) => (
                     <p
-                      className={`w-1/6 text-center p-1 rounded-full  text-white ${hasTimePassed(time) ? "bg-gray-600":"bg-red-300"} `}
+                      className={`w-1/6 text-center p-1 rounded-full  text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
                       key={index}
                     >
                       {time}
@@ -256,7 +259,7 @@ const Schedule = () => {
                 <div className="flex gap-3 justify-start flex-wrap ">
                   {busSchedules.Casa.toOlbia.map((time, index) => (
                     <p
-                      className={`w-1/6 text-center p-1 rounded-full  bg-red-300 text-white ${hasTimePassed(time) ? "bg-gray-600":"bg-red-300"}  `}
+                      className={`w-1/6 text-center p-1 rounded-full  bg-red-300 text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
                       key={index}
                     >
                       {time}
@@ -288,7 +291,7 @@ const Schedule = () => {
             <div className="flex gap-3 justify-start flex-wrap ">
               {schedule.map((time, index) => (
                 <p
-                  className={`w-1/6 text-center p-1 rounded-full bg-red-300 text-white ${hasTimePassed(time) ? "bg-gray-600":"bg-red-300"} `}
+                  className={`w-1/6 text-center p-1 rounded-full bg-red-300 text-white  bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
                   key={index}
                 >
                   {time}

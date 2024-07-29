@@ -160,7 +160,7 @@ const SuperList = () => {
 
 
         </div>
-        <ul className="space-y-2">
+        <ul className="space-y-2 mb-5">
         {Object.keys(restCategories).map((category) => {
            const productsInCategory = restCategories[category];
            const totalProducts = productsInCategory.length;
