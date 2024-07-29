@@ -39,7 +39,9 @@ export default function RootLayout({
         <Providers>
           <Header />
           <Navbar/>
+          <div className="flex flex-col mb-12">
           {children}
+          </div>
         </Providers>
       </body>
     </html>

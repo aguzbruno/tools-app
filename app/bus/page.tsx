@@ -188,7 +188,7 @@ const Schedule = () => {
                 <div className="flex justify-start flex-wrap ">
                   {busSchedules.Casa.toPorto.map((time, index) => (
                     <p
-                      className={`w-1/6 mb-3 ml-1 text-center rounded-full  p-2  text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
+                      className={`w-1/4 mb-3 ml-1 text-center rounded-full  p-2  text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
                       key={index}
                     >
                       {time}
@@ -211,7 +211,7 @@ const Schedule = () => {
                 <div className="flex justify-start flex-wrap ">
                   {busSchedules.Casa.toOlbia.map((time, index) => (
                     <p
-                      className={`w-1/6 mb-3 ml-1 text-center  p-2 rounded-full text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
+                      className={`w-1/4 mb-3 ml-1 text-center  p-2 rounded-full text-white bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
                       key={index}
                     >
                       {time}
@@ -243,7 +243,7 @@ const Schedule = () => {
             <div className="flex justify-start flex-wrap ">
               {schedule.map((time, index) => (
                 <p
-                  className={`w-1/6 mb-3 ml-1  text-center  p-2 rounded-full text-white  bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
+                  className={`w-1/4 mb-3 ml-1  text-center  p-2 rounded-full text-white  bg-gray-600 ${!hasTimePassed(time) && "bg-red-300"} `}
                   key={index}
                 >
                   {time}
