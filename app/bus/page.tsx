@@ -103,103 +103,58 @@ const Schedule = () => {
     const busTime = hours * 60 + minutes;
     return busTime <= currentTime;
   };
-  const now = new Date();
-  const currentTime = now.getHours() * 60 + now.getMinutes(); // En minutos
-  const schedule = getActiveSchedule();
+
+  const getNextBus = (schedule: string[], currentTime: number) => {
+    const upcomingBuses = schedule
+      .map((time) => {
+        const [hours, minutes] = time.split(":").map(Number);
+        const busTime = hours * 60 + minutes;
+        return { time, busTime };
+      })
+      .filter((bus) => bus.busTime > currentTime);
+
+    if (upcomingBuses.length > 0) {
+      return upcomingBuses[0];
+    } else {
+      const [hours, minutes] = schedule[0].split(":").map(Number);
+      const nextDayBusTime = (24 * 60) + (hours * 60 + minutes);
+      return { time: schedule[0], busTime: nextDayBusTime };
+    }
+  };
+
   useEffect(() => {
     const updateNextBus = () => {
       const now = new Date();
       const currentTime = now.getHours() * 60 + now.getMinutes(); // En minutos
-      const schedule = getActiveSchedule();
 
       if (activeTab === "Casa") {
         const portoSchedule = busSchedules.Casa.toPorto;
         const olbiaSchedule = busSchedules.Casa.toOlbia;
 
-        const upcomingPortoBuses = portoSchedule
-          .map((time) => {
-            const [hours, minutes] = time.split(":").map(Number);
-            const busTime = hours * 60 + minutes;
-            return { time, busTime };
-          })
-          .filter((bus) => bus.busTime > currentTime);
+        const nextPortoBus = getNextBus(portoSchedule, currentTime);
+        const nextOlbiaBus = getNextBus(olbiaSchedule, currentTime);
 
-        const upcomingOlbiaBuses = olbiaSchedule
-          .map((time) => {
-            const [hours, minutes] = time.split(":").map(Number);
-            const busTime = hours * 60 + minutes;
-            return { time, busTime };
-          })
-          .filter((bus) => bus.busTime > currentTime);
+        setNextBusPorto(nextPortoBus.time);
+        setCountdownPorto((nextPortoBus.busTime - currentTime) * 60); // En segundos
 
-        if (upcomingPortoBuses.length > 0) {
-          const nextBus = upcomingPortoBuses[0];
-          setNextBusPorto(nextBus.time);
-          setCountdownPorto((nextBus.busTime - currentTime) * 60); // En segundos
-        } else {
-          setNextBusPorto(null);
-          setCountdownPorto(0);
-        }
+        setNextBusOlbia(nextOlbiaBus.time);
+        setCountdownOlbia((nextOlbiaBus.busTime - currentTime) * 60); // En segundos
 
-        if (upcomingOlbiaBuses.length > 0) {
-          const nextBus = upcomingOlbiaBuses[0];
-          setNextBusOlbia(nextBus.time);
-          setCountdownOlbia((nextBus.busTime - currentTime) * 60); // En segundos
-        } else {
-          setNextBusOlbia(null);
-          setCountdownOlbia(0);
-        }
       } else if (activeTab === "Porto") {
-        const upcomingBuses = busSchedules.Porto.toCasa
-          .map((time) => {
-            const [hours, minutes] = time.split(":").map(Number);
-            const busTime = hours * 60 + minutes;
-            return { time, busTime };
-          })
-          .filter((bus) => bus.busTime > currentTime);
-
-        if (upcomingBuses.length > 0) {
-          const nextBus = upcomingBuses[0];
-          setNextBusCasa(nextBus.time);
-          setCountdownCasa((nextBus.busTime - currentTime) * 60); // En segundos
-        } else {
-          setNextBusCasa(null);
-          setCountdownCasa(0);
-        }
+        const schedule = busSchedules.Porto.toCasa;
+        const nextBus = getNextBus(schedule, currentTime);
+        setNextBusCasa(nextBus.time);
+        setCountdownCasa((nextBus.busTime - currentTime) * 60); // En segundos
       } else if (activeTab === "Super") {
-        const upcomingBuses = busSchedules.Super.toCasa
-          .map((time) => {
-            const [hours, minutes] = time.split(":").map(Number);
-            const busTime = hours * 60 + minutes;
-            return { time, busTime };
-          })
-          .filter((bus) => bus.busTime > currentTime);
-
-        if (upcomingBuses.length > 0) {
-          const nextBus = upcomingBuses[0];
-          setNextBusCasa(nextBus.time);
-          setCountdownCasa((nextBus.busTime - currentTime) * 60); // En segundos
-        } else {
-          setNextBusCasa(null);
-          setCountdownCasa(0);
-        }
+        const schedule = busSchedules.Super.toCasa;
+        const nextBus = getNextBus(schedule, currentTime);
+        setNextBusCasa(nextBus.time);
+        setCountdownCasa((nextBus.busTime - currentTime) * 60); // En segundos
       } else if (activeTab === "Gimnasio") {
-        const upcomingBuses = busSchedules.Gimnasio.toCasa
-          .map((time) => {
-            const [hours, minutes] = time.split(":").map(Number);
-            const busTime = hours * 60 + minutes;
-            return { time, busTime };
-          })
-          .filter((bus) => bus.busTime > currentTime);
-
-        if (upcomingBuses.length > 0) {
-          const nextBus = upcomingBuses[0];
-          setNextBusCasa(nextBus.time);
-          setCountdownCasa((nextBus.busTime - currentTime) * 60); // En segundos
-        } else {
-          setNextBusCasa(null);
-          setCountdownCasa(0);
-        }
+        const schedule = busSchedules.Gimnasio.toCasa;
+        const nextBus = getNextBus(schedule, currentTime);
+        setNextBusCasa(nextBus.time);
+        setCountdownCasa((nextBus.busTime - currentTime) * 60); // En segundos
       }
     };
 
@@ -217,19 +172,17 @@ const Schedule = () => {
     const schedule = getActiveSchedule();
     return (
       <div className="flex flex-col px-10 mt-5">
-        {now.getDay()}
         {activeTab === "Casa" && (
           <>
             {nextBusPorto && (
               <div className="font-bold mb-2">
                 Próximo bus de Casa a Porto:{" "}
                 <div className="flex items-center gap-5 justify-center">
-              <p className="font-bold text-blue-600 text-4xl my-2 bg-blue-200 p-2 rounded-md">
-                  {nextBusPorto}
-                </p>{" "}
-                ({Math.floor(countdownPorto / 60)}:
-                {String(countdownPorto % 60).padStart(2, "0")} minutos
-                restantes)
+                  <p className="font-bold text-blue-600 text-4xl my-2 bg-blue-200 p-2 rounded-md">
+                    {nextBusPorto}
+                  </p>{" "}
+                  ({Math.floor(countdownPorto / 60)}:
+                  {String(countdownPorto % 60).padStart(2, "0")} minutos restantes)
                 </div>
                 <p className="my-2">Horarios:</p>
                 <div className="flex gap-3 justify-start flex-wrap ">
@@ -248,12 +201,11 @@ const Schedule = () => {
               <div className="font-bold mb-2 ">
                 Próximo bus de Casa a Olbia:{" "}
                 <div className="flex items-center gap-5 justify-center">
-                <p className="font-bold text-green-600 text-4xl my-2 bg-green-200 p-2 rounded-md">
-                  {nextBusOlbia}
-                </p>{" "}
-                ({Math.floor(countdownOlbia / 60)}:
-                {String(countdownOlbia % 60).padStart(2, "0")} minutos
-                restantes)
+                  <p className="font-bold text-green-600 text-4xl my-2 bg-green-200 p-2 rounded-md">
+                    {nextBusOlbia}
+                  </p>{" "}
+                  ({Math.floor(countdownOlbia / 60)}:
+                  {String(countdownOlbia % 60).padStart(2, "0")} minutos restantes)
                 </div>
                 <p className="my-2">Horarios:</p>
                 <div className="flex gap-3 justify-start flex-wrap ">
@@ -277,11 +229,11 @@ const Schedule = () => {
             <div className="font-bold mb-2  ">
               Próximo bus de {activeTab} a Casa:{" "}
               <div className="flex items-center gap-5 justify-center">
-              <p className="font-bold text-gray-600 text-4xl my-2 bg-gray-200 p-2 rounded-md">
-                {nextBusCasa}{" "}
-              </p>{" "}
-              ({Math.floor(countdownCasa / 60)}:
-              {String(countdownCasa % 60).padStart(2, "0")} minutos restantes)
+                <p className="font-bold text-gray-600 text-4xl my-2 bg-gray-200 p-2 rounded-md">
+                  {nextBusCasa}{" "}
+                </p>{" "}
+                ({Math.floor(countdownCasa / 60)}:
+                {String(countdownCasa % 60).padStart(2, "0")} minutos restantes)
               </div>
             </div>
           )}
