@@ -1,8 +1,8 @@
 // app/api/shopping-list/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '../lib/mongoose'
-import ShoppingListProduct from '../models/ShoppingListProducts'
 
+import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '../lib/mongoose';
+import ShoppingListProduct from '../models/ShoppingListProducts'
 
 export async function GET() {
   await dbConnect();
@@ -10,48 +10,55 @@ export async function GET() {
   return NextResponse.json(shoppingList);
 }
 
-// En tu ruta para agregar a la shopping list
 export async function POST(req: NextRequest) {
-    await dbConnect();
-    
-    try {
-      const { product } = await req.json();
-      console.log('Received product:', product);
-  
-      // Busca si el producto ya está en la lista de compras
-      const existingProduct = await ShoppingListProduct.findById(product._id);
-      if (existingProduct) {
-        console.log('Product already in shopping list:', product._id);
-        return NextResponse.json({ message: 'Product already in shopping list' }, { status: 400 });
-      } else {
-        // No crear un nuevo ID, usa el ID existente del producto
-        const newProduct = new ShoppingListProduct({ ...product, isPurchased: false });
-        console.log('New product to save:', newProduct);
-  
-        await newProduct.save();
-        console.log('Product saved successfully:', newProduct);
-  
-        return NextResponse.json(newProduct, { status: 201 });
-      }
-    } catch (error) {
-      console.error('Error adding product to shopping list:', error);
-      return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
-    }
-  }
-  
-
-export async function PATCH(req: NextRequest) {
   await dbConnect();
-  const { productId } = await req.json();
-  const product = await ShoppingListProduct.findById(productId);
-  if (product) {
-    product.isPurchased = !product.isPurchased;
-    await product.save();
-    return NextResponse.json(product);
-  } else {
-    return NextResponse.json({ message: 'Product not found' }, { status: 404 });
+
+  try {
+    const { product } = await req.json();
+    console.log('Received product:', product);
+
+    const existingProduct = await ShoppingListProduct.findById(product._id);
+    if (existingProduct) {
+      console.log('Product already in shopping list:', product._id);
+      return NextResponse.json({ message: 'Product already in shopping list' }, { status: 400 });
+    } else {
+      const newProduct = new ShoppingListProduct({ 
+        ...product, 
+        purchaseDetails: product.purchaseDetails || '', // Cambia esto si necesitas la propiedad correcta
+        isPurchased: false 
+      });
+      
+      console.log('New product to save:', newProduct);
+      await newProduct.save();
+      console.log('Product saved successfully:', newProduct);
+      return NextResponse.json(newProduct, { status: 201 });
+    }
+  } catch (error) {
+    console.error('Error adding product to shopping list:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
+export async function PATCH(req: NextRequest) {
+  await dbConnect();
+
+  try {
+    const { productId, isPurchased } = await req.json();
+    const product = await ShoppingListProduct.findById(productId);
+    
+    if (product) {
+      // Cambiar el estado de isPurchased
+      product.isPurchased = isPurchased;
+      await product.save();
+      return NextResponse.json(product);
+    } else {
+      return NextResponse.json({ message: 'Product not found' }, { status: 404 });
+    }
+  } catch (error) {
+    console.error('Error updating purchase status:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
 
 export async function DELETE(req: NextRequest) {
   await dbConnect();
@@ -72,4 +79,3 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
-

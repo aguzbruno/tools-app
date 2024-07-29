@@ -1,7 +1,7 @@
 // pages/super/index.tsx
-import SuperList from '../components/SuperList';
+import SuperList from '../components/Super/SuperList';
 import Header from '../components/Header';
-import ShoppingHistory from '../components/ShoppingHistory';
+import ShoppingHistory from '../components/Super/ShoppingHistory'
 
 const HistoryPage = () => {
   return (

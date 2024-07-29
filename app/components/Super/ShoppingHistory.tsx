@@ -1,8 +1,8 @@
 'use client';
 // components/ShoppingHistory.tsx
 import { useEffect, useState } from 'react';
-import { Product, IShoppingHistory } from '../services/types';
-import { getShoppingHistory } from '../services/superService';
+import { Product, IShoppingHistory } from '../../services/types';
+import { getShoppingHistory } from '../../services/superService';
 
 const ShoppingHistoryComponent = () => {
   const [history, setHistory] = useState<IShoppingHistory[]>([]);

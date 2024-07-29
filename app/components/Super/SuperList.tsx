@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSuperStore } from "../store/superStore";
+import { useSuperStore } from "../../store/superStore";
 import Link from "next/link";
 import {
   clearShoppingList,
@@ -8,12 +8,12 @@ import {
   getShoppingList,
   removeFromShoppingList,
   saveShoppingHistory
-} from "../services/superService";
-import { Product,ShoppingListProduct } from "../services/types";
-import Bomb from '../assets/bomb.svg'
+} from "../../services/superService";
+import { Product,ShoppingListProduct } from "../../services/types";
+import Bomb from '../../assets/bomb.svg'
 import Image from "next/image";
-import ProductCardDetail from "./ProductCardDetail";
-import Save from '../assets/save.svg'
+import ProductCardDetail from "./ProductCard/ProductCardDetail";
+import Save from '../../assets/save.svg'
 const SuperList = () => {
   const products = useSuperStore((state) => state.products);
   const shoppingList = useSuperStore((state) => state.shoppingList);

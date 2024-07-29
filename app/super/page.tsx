@@ -1,5 +1,5 @@
 // pages/super/index.tsx
-import SuperList from '../components/SuperList';
+import SuperList from '../components/Super/SuperList';
 import Header from '../components/Header';
 
 const SuperPage = () => {

@@ -1,12 +1,15 @@
 // types.ts
 export interface Product {
-    _id: string; // Usamos string porque los IDs de MongoDB son strings
-    name: string;
-    quantity: string;
-    category?: string;
-    price?: number;
-    
-  }
+  _id: string;
+  name: string;
+  unit?: string;
+  amount?: number;
+  price?: number;
+  category?: string;
+  brand?: string;
+}
+
+export interface CreateProductInput extends Omit<Product, '_id'> {}
    
   export interface ApiResponse<T> {
     success: boolean;
@@ -14,6 +17,7 @@ export interface Product {
   }
   export interface ShoppingListProduct extends Product {
     isPurchased: boolean;
+    purchaseDetails: string;
   }
   export interface IShoppingHistory {
     _id: string;

@@ -1,13 +1,15 @@
 'use client'
 import { useState } from 'react';
-import { createProduct } from '../services/superService';
+import { createProduct } from '../../services/superService'
 import { useRouter } from 'next/navigation';
 
 const AddProduct = () => {
   const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState('');
+  const [unit, setUnit] = useState('');
+  const [amount, setAmount] = useState<string | undefined>(undefined);
   const [price, setPrice] = useState<number | undefined>(undefined);
   const [category, setCategory] = useState<string | undefined>(undefined);
+  const [brand, setBrand] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,9 +18,11 @@ const AddProduct = () => {
     try {
       await createProduct({
         name,
-        quantity,
+        unit,
+        amount: amount ? Number(amount) : undefined,
         price: price,
-        category:category
+        category: category,
+        brand
       });
       router.push('/super');
     } catch (error) {
@@ -42,13 +46,24 @@ const AddProduct = () => {
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="quantity" className="block text-lg font-medium text-gray-700">Unidad / Peso</label>
+        <label htmlFor="brand" className="block text-lg font-medium text-gray-700">Marca (opcional)</label>
         <input
-          id="quantity"
+          id="brand"
           type="text"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          placeholder="Cantidad"
+          value={brand}
+          onChange={(e) => setBrand(e.target.value)}
+          placeholder="Marca"
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="unit" className="block text-lg font-medium text-gray-700">Unidad / Peso</label>
+        <input
+          id="unit"
+          type="text"
+          value={unit}
+          onChange={(e) => setUnit(e.target.value)}
+          placeholder="Unidad"
           required
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
         />
@@ -73,8 +88,8 @@ const AddProduct = () => {
           <option value='Droga'>Droga</option>
           <option value='Otros'>Otros</option>
         </select>
-
       </div>
+     
       <div className="mb-4">
         <label htmlFor="price" className="block text-lg font-medium text-gray-700">Precio (opcional)</label>
         <input

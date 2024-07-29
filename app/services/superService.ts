@@ -1,12 +1,12 @@
 import axios from 'axios';
-import { IShoppingHistory, Product, ShoppingListProduct } from './types';
+import { CreateProductInput, IShoppingHistory, Product, ShoppingListProduct } from './types';
 
 const api = axios.create({
   baseURL: '/api', // Asegúrate de que esta URL coincida con la configuración de tu API
 });
 
 // Productos
-export const getProducts = async () => {
+export const getProducts = async (): Promise<Product[]> => {
   try {
     const response = await api.get('/products');
     return response.data.data;
@@ -16,7 +16,7 @@ export const getProducts = async () => {
   }
 };
 
-export const getProduct = async (id: string) => {
+export const getProduct = async (id: string): Promise<Product> => {
   try {
     const response = await api.get(`/products/${id}`);
     return response.data;
@@ -26,7 +26,7 @@ export const getProduct = async (id: string) => {
   }
 };
 
-export const createProduct = async (product: any) => {
+export const createProduct = async (product: CreateProductInput): Promise<Product> => {
   try {
     const response = await api.post('/products', product);
     return response.data;
@@ -36,7 +36,8 @@ export const createProduct = async (product: any) => {
   }
 };
 
-export const updateProduct = async (id: string, product: any) => {
+
+export const updateProduct = async (id: string, product: Partial<Product>): Promise<Product> => {
   try {
     const response = await api.put(`/products/${id}`, product);
     return response.data;
@@ -46,7 +47,7 @@ export const updateProduct = async (id: string, product: any) => {
   }
 };
 
-export const deleteProduct = async (id: string) => {
+export const deleteProduct = async (id: string): Promise<void> => {
   try {
     await api.delete(`/products/${id}`);
   } catch (error) {
@@ -56,7 +57,7 @@ export const deleteProduct = async (id: string) => {
 };
 
 // Lista de compras
-export const getShoppingList = async () => {
+export const getShoppingList = async (): Promise<ShoppingListProduct[]> => {
   try {
     const response = await api.get('/shopping-list');
     return response.data;
@@ -66,7 +67,7 @@ export const getShoppingList = async () => {
   }
 };
 
-export const addToShoppingList = async (product: Product | ShoppingListProduct) => {
+export const addToShoppingList = async (product: ShoppingListProduct): Promise<ShoppingListProduct> => {
   try {
     const response = await api.post('/shopping-list', { product });
     return response.data;
@@ -76,7 +77,7 @@ export const addToShoppingList = async (product: Product | ShoppingListProduct) 
   }
 };
 
-export const removeFromShoppingList = async (productId: string) => {
+export const removeFromShoppingList = async (productId: string): Promise<void> => {
   try {
     const response = await api.delete('/shopping-list', { data: { productId } });
     return response.data;
@@ -85,12 +86,19 @@ export const removeFromShoppingList = async (productId: string) => {
     throw error;
   }
 };
-// services/superService.ts
-
-
-export const togglePurchaseStatus = async (productId: string) => {
+export const updateAmount = async (productId: string, amount: number): Promise<ShoppingListProduct> => {
   try {
-    const response = await api.patch('/shopping-list', { productId });
+    const response = await api.patch(`/shopping-list/amount`, { productId, amount });
+    return response.data;
+  } catch (error) {
+    console.error('Error increasing product quantity:', error);
+    throw error;
+  }
+};
+
+export const updatePurchaseStatus = async (productId: string,isPurchased:boolean): Promise<ShoppingListProduct> => {
+  try {
+    const response = await api.patch('/shopping-list', { productId,isPurchased});
     return response.data;
   } catch (error) {
     console.error('Error updating purchase status:', error);
@@ -98,7 +106,22 @@ export const togglePurchaseStatus = async (productId: string) => {
   }
 };
 
-export async function clearShoppingList() {
+export const updatePurchaseDetails = async (productId: string, purchaseDetails: string) => {
+  const response = await fetch('/api/shopping-list/purchase-details', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ productId, purchaseDetails }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error updating purchase detail');
+  }
+
+  return await response.json();
+};
+export async function clearShoppingList(): Promise<void> {
   try {
     const response = await axios.delete('/api/shopping-list/clear');
     return response.data;
@@ -107,17 +130,24 @@ export async function clearShoppingList() {
     throw error;
   }
 }
-// service para obtener los detalles de los productos
-export const getProductDetails = async (productIds: string[]) => {
-  const response = await fetch('/api/products', { // Cambia esto según tu endpoint
-    method: 'POST',
-    body: JSON.stringify({ ids: productIds }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return response.json();
+
+// Servicio para obtener los detalles de los productos
+export const getProductDetails = async (productIds: string[]): Promise<Product[]> => {
+  try {
+    const response = await fetch('/api/products', { // Cambia esto según tu endpoint
+      method: 'POST',
+      body: JSON.stringify({ ids: productIds }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+    throw error;
+  }
 };
+
 // superServices.ts
 export const saveShoppingHistory = async (products: Product[]): Promise<void> => {
   try {
@@ -140,6 +170,7 @@ export const saveShoppingHistory = async (products: Product[]): Promise<void> =>
     console.error((error as Error).message);
   }
 };
+
 export const getShoppingHistory = async (): Promise<IShoppingHistory[]> => {
   try {
     const response = await fetch('/api/shopping-history', {
