@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import Header from "./components/Header";
 import { useDarkMode } from "./store/darkMode";
 import { useEffect } from 'react';
+import Navbar from "./components/Navbar/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +38,7 @@ export default function RootLayout({
       <body className={`${darkMode ? 'bg-black' : 'bg-white'}`}>
         <Providers>
           <Header />
+          <Navbar/>
           {children}
         </Providers>
       </body>
