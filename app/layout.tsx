@@ -35,7 +35,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className={`${darkMode ? 'bg-black' : 'bg-white'}`}>
+      <body className={` mx-auto ${darkMode ? 'bg-black' : 'bg-white' }`} style={{maxWidth:"450px"}}>
         <Providers>
           <Header />
           <Navbar/>

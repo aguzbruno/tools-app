@@ -1,0 +1,12 @@
+.category-item {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .category-item.move-up {
+    transform: translateY(-20px);
+  }
+  
+  .category-item.move-down {
+    transform: translateY(20px);
+  }
+  

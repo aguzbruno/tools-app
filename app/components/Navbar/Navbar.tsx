@@ -34,7 +34,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="h-16 border-t-2 w-full fixed bottom-0 bg-white flex flex-row justify-around items-center">
+    <div className="p-5 rounded-xl w-full border-t-2 pb-10 fixed bottom-0 bg-white z-50 flex flex-row justify-around items-center" style={{maxWidth:"450px"}}>
       {tabs.map((tab, index) => (
         <Tab
           key={index}

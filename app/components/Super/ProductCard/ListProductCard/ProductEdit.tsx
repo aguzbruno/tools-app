@@ -1,28 +1,50 @@
-// components/ProductEdit.tsx
-
-import React from 'react';
-import { Product, ShoppingListProduct } from "../../../services/types";
+'use client'
+import React, { useState } from 'react';
+import { Product, ShoppingListProduct } from "../../../../services/types";
 import Image from "next/image";
-import Save from "../../../assets/save.svg";
+import Save from "../../../../assets/save.svg";
+import { updateProduct } from '@/app/services/superService';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface ProductEditProps {
-  editedProduct: Product | ShoppingListProduct;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  onSave: () => void;
+  product: Product;
   onCancel: () => void;
 }
 
 const ProductEdit: React.FC<ProductEditProps> = ({
-  editedProduct,
-  onChange,
-  onSave,
+  product,
   onCancel,
 }) => {
+  const [editedProduct, setEditedProduct] = useState<Product>({ ...product });
+  
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setEditedProduct({
+      ...editedProduct,
+      [name]: value,
+    });
+  };
+
+  const hasChanges = () => {
+    return JSON.stringify(product) !== JSON.stringify(editedProduct);
+  };
+
+  const handleSaveClick = async () => {
+    if (hasChanges()) {
+      await updateProduct(editedProduct._id, editedProduct);
+      toast.success("Producto actualizado");
+    }
+    toast.success("No ha habido cambios en el producto");
+    onCancel()
+  };
   return (
     <li
       className={`px-3 w-5/5 rounded-md shadow-md flex justify-between items-center`}
       style={{ border: "1px solid #E3E3E3", borderRadius: "11px" }}
     >
+      <Toaster/>
       <div className="flex flex-col">
         <div className="flex flex-col items-center justify-center gap-4">
           <div className="flex flex-col py-1 gap-2">
@@ -30,8 +52,8 @@ const ProductEdit: React.FC<ProductEditProps> = ({
               type="text"
               name="name"
               value={editedProduct.name}
-              onChange={onChange}
-              placeholder="Product Name"
+              onChange={handleInputChange}
+              placeholder="Nombre"
               className="text-lg font-semibold border-solid border-2 border-sky-500 rounded-lg"
               style={{ color: "#009456" }}
             />
@@ -39,30 +61,30 @@ const ProductEdit: React.FC<ProductEditProps> = ({
               type="text"
               name="brand"
               value={editedProduct.brand}
-              onChange={onChange}
-              placeholder="Brand"
+              onChange={handleInputChange}
+              placeholder="Marca"
               className="text-lg text-gray-300 font-semibold border-solid border-2 border-sky-500 rounded-lg"
             />
             <input
               type="text"
               name="unit"
               value={editedProduct.unit}
-              onChange={onChange}
-              placeholder="Unit"
+              onChange={handleInputChange}
+              placeholder="Unidad"
               className="text-lg text-gray-300 font-semibold border-solid border-2 border-sky-500 rounded-lg"
             />
             <input
               type="number"
               name="price"
               value={editedProduct.price !== undefined ? editedProduct.price.toString() : ""}
-              onChange={onChange}
-              placeholder="Price"
+              onChange={handleInputChange}
+              placeholder="Precio"
               className="text-lg font-semibold border-solid border-2 border-sky-500 rounded-lg"
             />
             <select
               name="category"
               value={editedProduct.category || ""}
-              onChange={onChange}
+              onChange={handleInputChange}
               className="text-lg font-semibold border-solid border-2 border-sky-500 rounded-lg"
             >
               <option value="">Selecciona una categoría</option>
@@ -81,7 +103,7 @@ const ProductEdit: React.FC<ProductEditProps> = ({
         </div>
       </div>
       <button onClick={onCancel}> X </button>
-      <Image onClick={onSave} className="cursor-pointer" height={25} width={25} src={Save} alt="Guardar" />
+      <Image onClick={handleSaveClick} className="cursor-pointer" height={25} width={25} src={Save} alt="Guardar" />
     </li>
   );
 };
