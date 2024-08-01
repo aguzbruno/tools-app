@@ -62,8 +62,10 @@ const ShoppingListHeader: React.FC<ShoppingListHeaderProps> = ({ shoppingList })
     <div className="flex flex-row justify-between items-center mb-4">
       <div className="flex flex-col">
         <p className="text-xs font-bold text-gray-300">LISTA DEL SUPER</p>
+        <p className="text-xs font-bold text-gray-500">{shoppingList?.length} PRODUCTOS</p>
         {shoppingList.length > 0 ? (
           <div className="flex items-center gap-2">
+            
             <p className="text-md font-bold text-gray-500">ESTIMADO :</p> €
             {shoppingList.reduce((acc, product) => acc + (product.price || 0) * (product.amount ? Number(product.amount) : 1), 0).toFixed(2)}
           </div>

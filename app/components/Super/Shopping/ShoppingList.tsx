@@ -1,12 +1,10 @@
-"use client";
 import { useEffect, useState } from "react";
+import { useSuperStore } from "../../../store/superStore";
 import { clearShoppingList, getProducts, getShoppingList, saveShoppingHistory } from "../../../services/superService";
 import ShoppingListHeader from "./ShoppingListHeader";
 import CategoryToggleButtons from "./CategoryToggleButtons";
 import CategoryItem from "./CategoryItem";
-import { useSuperStore } from "@/app/store/superStore";
-import { ShoppingListProduct } from "@/app/services/types";
-
+import { ShoppingListProduct } from "../../../services/types";
 
 interface OpenCategories {
   [key: string]: boolean;
@@ -91,10 +89,14 @@ export default function ShoppingList() {
         onHideBoughtChange={handleHideBoughtChange} 
       />
 
-      <ul className="space-y-2 mt-8">
+      <ul className="space-y-2">
         {categoryOrder.map((category) => {
           const productsInCategory = restCategoriesShopp[category];
           const visibleProducts = hideBought ? productsInCategory.filter(product => !product.isPurchased) : productsInCategory;
+
+          // Calcular el número de productos comprados y total en la categoría
+          const totalProducts = productsInCategory?.length;
+          const boughtProducts = productsInCategory?.filter(product => product.isPurchased)?.length;
 
           return (
             <CategoryItem
@@ -103,9 +105,8 @@ export default function ShoppingList() {
               productsInCategory={visibleProducts}
               openCategories={openCategories}
               toggleCategory={toggleCategory}
-              categoryOrder={categoryOrder}
-              setCategoryOrder={setCategoryOrder}
-              index={categoryOrder.indexOf(category)}
+              totalProducts={totalProducts}
+              boughtProducts={boughtProducts} // Pasamos la información al componente CategoryItem
             />
           );
         })}
