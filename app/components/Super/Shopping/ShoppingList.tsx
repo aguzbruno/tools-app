@@ -5,25 +5,26 @@ import ShoppingListHeader from "./ShoppingListHeader";
 import CategoryToggleButtons from "./CategoryToggleButtons";
 import CategoryItem from "./CategoryItem";
 import { ShoppingListProduct } from "../../../services/types";
+import Loader from "../Loader";
+import UpIcon from "../../assets/up.svg";
+import DownIcon from "../../assets/down.svg";
 
 interface OpenCategories {
   [key: string]: boolean;
 }
 
 export default function ShoppingList() {
-  const products = useSuperStore((state) => state.products);
-  const shoppingList = useSuperStore((state) => state.shoppingList);
-  const setProducts = useSuperStore((state) => state.setProducts);
-  const setShoppingList = useSuperStore((state) => state.setShoppingList);
-
+  const {shoppingList,setIsLoading,isLoading,setShoppingList,setProducts} = useSuperStore();
   const [openCategories, setOpenCategories] = useState<OpenCategories>({});
   const [categoryOrder, setCategoryOrder] = useState<string[]>([]);
   const [showOpenButton, setShowOpenButton] = useState<boolean>(true);
   const [hideBought, setHideBought] = useState<boolean>(false); // Estado para ocultar productos comprados
 
   const fetchProducts = async () => {
+    
     const products = await getProducts();
     setProducts(products);
+    setIsLoading(false)
   };
 
   const fetchShoppingList = async () => {
@@ -81,6 +82,7 @@ export default function ShoppingList() {
   };
 
   return (
+    isLoading ? (<Loader/>):(
     <div className="mb-6">
       <ShoppingListHeader shoppingList={shoppingList} />
       <CategoryToggleButtons 
@@ -90,7 +92,7 @@ export default function ShoppingList() {
       />
 
       <ul className="space-y-2">
-        {categoryOrder.map((category) => {
+        {categoryOrder.map((category,index) => {
           const productsInCategory = restCategoriesShopp[category];
           const visibleProducts = hideBought ? productsInCategory.filter(product => !product.isPurchased) : productsInCategory;
 
@@ -107,10 +109,13 @@ export default function ShoppingList() {
               toggleCategory={toggleCategory}
               totalProducts={totalProducts}
               boughtProducts={boughtProducts} // Pasamos la información al componente CategoryItem
+              categoryOrder={categoryOrder}
+              setCategoryOrder={setCategoryOrder}
+              index={index}
             />
           );
         })}
       </ul>
-    </div>
+    </div>)
   );
 }

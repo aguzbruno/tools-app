@@ -12,12 +12,13 @@ import {
 import { Product } from "../../services/types";
 import toast, { Toaster } from "react-hot-toast";
 import ListProductCard from "./ProductCard/ListProductCard/ListProductCard";
+import Loader from "./Loader";
 export default function ProductList() {
   const products = useSuperStore((state) => state.products);
   const shoppingList = useSuperStore((state) => state.shoppingList);
   const setProducts = useSuperStore((state) => state.setProducts);
   const setShoppingList = useSuperStore((state) => state.setShoppingList);
-
+  const {isLoading} = useSuperStore()
   const handleSaveHistory = async () => {
     await saveShoppingHistory(shoppingList);
     toast("Se ha guardado correctamente");
@@ -80,7 +81,7 @@ export default function ProductList() {
     fetchShoppingList();
   }, []);
 
-  return (
+  return ( isLoading ? (<Loader/>):(
     <div>
       <Toaster />
       <div className="flex flex-row gap-3 items-center mb-4">
@@ -153,6 +154,6 @@ export default function ProductList() {
           </li>
         )}
       </ul>
-    </div>
+    </div>)
   );
 }

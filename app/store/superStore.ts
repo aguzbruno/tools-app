@@ -5,10 +5,12 @@ import { Product, ShoppingListProduct } from '../services/types';
 interface SuperStoreState {
   products: Product[];
   shoppingList: ShoppingListProduct[];
+  isLoading: boolean;
   setProducts: (products: Product[]) => void;
   setShoppingList: (shoppingList: ShoppingListProduct[]) => void;
   addToShoppingList: (product: ShoppingListProduct) => void;
   removeFromShoppingList: (productId: string) => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 // Función para ordenar productos por isPurchased, categoría y nombre
@@ -43,6 +45,8 @@ const sortProducts = (products: Product[]) => {
 export const useSuperStore = create<SuperStoreState>((set) => ({
   products: [],
   shoppingList: [],
+  isLoading: true,
+  setIsLoading: (isLoading) => set({ isLoading }),
   setProducts: (products) => set({ products: sortProducts(products) }), // Asegúrate de que 'products' sea del tipo correcto
   setShoppingList: (shoppingList) => set({ shoppingList: sortShoppingList(shoppingList) }), // Ordenar antes de establecer
   addToShoppingList: (product: ShoppingListProduct) =>

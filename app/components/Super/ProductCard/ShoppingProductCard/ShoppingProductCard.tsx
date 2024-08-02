@@ -6,9 +6,12 @@ import AmountControls from "../ProductDisplay/AmountControls";
 import TogglePurchase from "../ProductDisplay/TogglePurchase";
 import {
   getShoppingList,
+  removeFromShoppingList,
   updatePurchaseDetails,
 } from "@/app/services/superService";
 import { useSuperStore } from "@/app/store/superStore";
+import Image from "next/image";
+import DeleteIcon from "../../../../assets/delete.svg";
 
 interface ShoppingProductProps {
   product: ShoppingListProduct;
@@ -26,6 +29,15 @@ export default function ShoppingProductCard({ product }: ShoppingProductProps) {
       setShoppingList(updatedShoppingList);
       setPurchaseDetails("");
       setShowAll(false);
+    } catch (error) {
+      console.error("Error adding purchase details:", error);
+    }
+  };
+  const handleRemoveProductFromShoppingList = async () => {
+    try {
+      await removeFromShoppingList(product._id);
+      const updatedShoppingList = await getShoppingList();
+      setShoppingList(updatedShoppingList);
     } catch (error) {
       console.error("Error adding purchase details:", error);
     }
@@ -76,10 +88,19 @@ export default function ShoppingProductCard({ product }: ShoppingProductProps) {
 
         {product.price !== undefined && <ProductPrice price={product.price} />}
 
-        {!showAll && (
+        {!showAll ? (
           <div className="flex gap-1 items-center">
             <TogglePurchase product={product} key={product._id} />
           </div>
+        ) : (
+          <Image
+            src={DeleteIcon}
+            height={25}
+            width={25}
+            className="cursor-pointer mr-2"
+            onClick={handleRemoveProductFromShoppingList}
+            alt="Eliminar"
+          />
         )}
       </div>
       {showAll && (

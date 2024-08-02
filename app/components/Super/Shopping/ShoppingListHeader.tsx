@@ -1,9 +1,9 @@
 import { useSuperStore } from "../../../store/superStore";
 import Image from "next/image";
-import Save from "../../../assets/save.svg";
-import Bomb from "../../../assets/bomb.svg";
 import toast from "react-hot-toast";
 import { saveShoppingHistory, clearShoppingList, getShoppingList } from "../../../services/superService";
+import SaveButton from "../../Buttons/SaveButton";
+import BombButton from "../../Buttons/BombButton";
 
 interface ShoppingListHeaderProps {
   shoppingList: any[];
@@ -74,12 +74,8 @@ const ShoppingListHeader: React.FC<ShoppingListHeaderProps> = ({ shoppingList })
         )}
       </div>
       <div className="flex gap-3">
-        <div className="cursor-pointer border-2 border-green-700 rounded-xl px-1 pt-1">
-          <Image onClick={handleSaveHistory} height={30} width={30} src={Save} alt="Guardar" />
-        </div>
-        <div className="cursor-pointer border-2 border-red-700 rounded-xl px-1 pt-1">
-          <Image onClick={handleClearShoppingList} src={Bomb} alt="Vaciar" width={30} height={30} />
-        </div>
+          <SaveButton onClick={handleSaveHistory}></SaveButton>
+          <BombButton onClick={handleClearShoppingList}></BombButton>
       </div>
     </div>
   );
