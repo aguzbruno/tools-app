@@ -12,6 +12,14 @@ const ShoppingHistorySchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  image: {
+    type: String,
+    required: false, // Si no es obligatorio, puedes omitir esta línea o dejarla como false.
+  },
+  totalPrice: {
+    type: Number,
+    required: true,
+  },
 });
 
 const ShoppingHistory = models.ShoppingHistory || model('ShoppingHistory', ShoppingHistorySchema);

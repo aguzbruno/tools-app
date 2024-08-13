@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Product, IShoppingHistory } from '../../services/types';
 import { getShoppingHistory } from '../../services/superService';
+import Image from 'next/image';
 
 const ShoppingHistoryComponent = () => {
   const [history, setHistory] = useState<IShoppingHistory[]>([]);
@@ -13,6 +14,7 @@ const ShoppingHistoryComponent = () => {
       try {
         const data = await getShoppingHistory();
         setHistory(data);
+        console.log(data)
       } catch (error) {
         setError('Error fetching history');
         console.error('Error fetching history:', error);
@@ -30,7 +32,8 @@ const ShoppingHistoryComponent = () => {
         {history.length === 0 && !error && <p>No hay historial de compras.</p>}
         {history.map((entry) => (
           <li key={entry._id} className="mb-4">
-            <strong className="block mb-2">{new Date(entry.timestamp).toLocaleString()}</strong>
+            {entry.image && <Image src={`${entry.image}`} width={200} height={200} alt='imagen'/>}
+            <strong className="block mb-2">{new Date(entry.createdAt).toLocaleString()}</strong>
             <ul className="list-disc list-inside ml-4">
               {entry.products.map((product) => (
                 <li key={product._id} className="mb-1">

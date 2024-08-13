@@ -148,16 +148,22 @@ export const getProductDetails = async (productIds: string[]): Promise<Product[]
   }
 };
 
-// superServices.ts
-export const saveShoppingHistory = async (products: Product[]): Promise<void> => {
+
+
+export const saveShoppingHistory = async (products: Product[], base64Image: string,totalPrice: number): Promise<void> => {
   try {
     const productIds = products.map(product => product._id);
+
     const response = await fetch('/api/shopping-history', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ products: productIds }),
+      body: JSON.stringify({
+        products: productIds,
+        image: base64Image,
+        totalPrice
+      }),
     });
 
     if (!response.ok) {
@@ -170,6 +176,8 @@ export const saveShoppingHistory = async (products: Product[]): Promise<void> =>
     console.error((error as Error).message);
   }
 };
+
+
 
 export const getShoppingHistory = async (): Promise<IShoppingHistory[]> => {
   try {

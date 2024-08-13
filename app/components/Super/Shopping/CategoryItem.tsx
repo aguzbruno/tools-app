@@ -12,9 +12,9 @@ interface CategoryItemProps {
   toggleCategory: (category: string) => void;
   totalProducts: number;
   boughtProducts: number; // Nueva prop
-  categoryOrder:string[];
-  setCategoryOrder:(categoryOrder:string[])=>void
-  index:number;
+  categoryOrder: string[];
+  setCategoryOrder: (categoryOrder: string[]) => void;
+  index: number;
 }
 
 const CategoryItem: React.FC<CategoryItemProps> = ({
@@ -26,7 +26,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   boughtProducts,
   categoryOrder,
   setCategoryOrder,
-  index
+  index,
 }) => {
   const moveCategory = (fromIndex: number, toIndex: number) => {
     const newCategoryOrder = Array.from(categoryOrder);
@@ -48,38 +48,41 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
     }
   };
   return (
-    <li>
-      <div className="flex justify-between items-center">
-        <div
-          className="flex flex-row cursor-pointer"
-          style={{ userSelect: "none" }}
-          onClick={() => toggleCategory(category)}
-        >
-          <h3 className="font-bold category-header text-xs">
-            {category}
-            <span className="ml-2 text-sm text-gray-500">
-              {boughtProducts}/{totalProducts}
-            </span>
-          </h3>
+    totalProducts &&
+    totalProducts > 0 && (
+      <li>
+        <div className="flex justify-between items-center">
+          <div
+            className="flex flex-row cursor-pointer"
+            style={{ userSelect: "none" }}
+            onClick={() => toggleCategory(category)}
+          >
+            <h3 className="font-bold category-header text-xs">
+              {category}
+              <span className="ml-2 text-sm text-gray-500">
+                {boughtProducts}/{totalProducts}
+              </span>
+            </h3>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => handleMoveUp(index)}>
+              <Image src={UpIcon} alt="up" width={20} height={20} />
+            </button>
+            <button onClick={() => handleMoveDown(index)}>
+              <Image src={DownIcon} alt="down" width={20} height={20} />
+            </button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => handleMoveUp(index)}>
-            <Image src={UpIcon} alt="up" width={20} height={20} />
-          </button>
-          <button onClick={() => handleMoveDown(index)}>
-            <Image src={DownIcon} alt="down" width={20} height={20} />
-          </button>
-        </div>
-      </div>
 
-      {openCategories[category] && (
-        <ul className="flex flex-col product-list gap-2">
-          {productsInCategory?.map((product) => (
-            <ShoppingProductCard product={product} key={product._id} />
-          ))}
-        </ul>
-      )}
-    </li>
+        {openCategories[category] && (
+          <ul className="flex flex-col product-list gap-2">
+            {productsInCategory?.map((product) => (
+              <ShoppingProductCard product={product} key={product._id} />
+            ))}
+          </ul>
+        )}
+      </li>
+    )
   );
 };
 

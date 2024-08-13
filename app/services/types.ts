@@ -20,7 +20,9 @@ export interface CreateProductInput extends Omit<Product, '_id'> {}
     purchaseDetails: string;
   }
   export interface IShoppingHistory {
+    createdAt: string;
     _id: string;
     products: Product[];
+    image:string;
     timestamp: string;
   }

@@ -19,20 +19,7 @@ export default function ProductList() {
   const setProducts = useSuperStore((state) => state.setProducts);
   const setShoppingList = useSuperStore((state) => state.setShoppingList);
   const {isLoading} = useSuperStore()
-  const handleSaveHistory = async () => {
-    await saveShoppingHistory(shoppingList);
-    toast("Se ha guardado correctamente");
-  };
-  const handleClearShoppingList = async () => {
-    try {
-      await clearShoppingList();
-      const updatedShoppingList = await getShoppingList();
-      setShoppingList(updatedShoppingList);
-      toast("Se han eliminado todos los productos de la lista");
-    } catch (error) {
-      console.error("Error clearing shopping list:", error);
-    }
-  };
+  
   const fetchProducts = async () => {
     try {
       const products = await getProducts();
@@ -81,7 +68,7 @@ export default function ProductList() {
     fetchShoppingList();
   }, []);
 
-  return ( isLoading ? (<Loader/>):(
+  return ( !isLoading &&(
     <div>
       <Toaster />
       <div className="flex flex-row gap-3 items-center mb-4">

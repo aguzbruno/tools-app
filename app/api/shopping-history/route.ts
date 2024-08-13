@@ -9,7 +9,7 @@ export async function GET() {
     const history = await ShoppingHistory.find().populate({
       path: 'products',
       model: Product,
-      select: 'name quantity price', // Selecciona solo los campos necesarios
+      select: 'name quantity price',
     });
 
     return NextResponse.json({ success: true, data: history });
@@ -17,23 +17,25 @@ export async function GET() {
     return NextResponse.json({ success: false, error: (error as Error).message }, { status: 400 });
   }
 }
-// POST request handler to save the shopping list history
-export async function POST(req: NextRequest) {
-  await dbConnect();
-  const { products } = await req.json(); // Expecting an array of product IDs
 
+export async function POST(req: NextRequest, res: NextResponse) {
+  await dbConnect();
   try {
-    // Check if all product IDs are valid and exist
+    const { products, image } = await req.json();
     const existingProducts = await Product.find({ '_id': { $in: products } });
 
     if (existingProducts.length !== products.length) {
       throw new Error('One or more products do not exist');
     }
 
-    const newHistory = new ShoppingHistory({ products: existingProducts });
+    const newHistory = new ShoppingHistory({
+      products: existingProducts,
+      image, // Base64 string
+    });
+
     await newHistory.save();
 
-    return NextResponse.json({ success: true, data: newHistory }, { status: 201 });
+    return NextResponse.json({ success: true, data: newHistory });
   } catch (error) {
     return NextResponse.json({ success: false, error: (error as Error).message }, { status: 400 });
   }
