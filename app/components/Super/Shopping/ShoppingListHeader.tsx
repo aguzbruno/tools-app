@@ -102,40 +102,49 @@
 };
 
 
-      const handleClearShoppingList = async () => {
-        let accept = false;
-        toast((t) => (
-          <div className="flex flex-col items-center justify-center gap-5">
-            <p className="text-md">
-              ¿Está seguro que quiere vaciar su lista de la compra?
-            </p>
-            <div className="flex gap-2">
-              <button
-                className="border-2 border-red-700 text-red-700 p-2 rounded-md"
-                onClick={() => toast.dismiss(t.id)}
-              >
-                Cancelar
-              </button>
-              <button
-                className="border-2 border-green-700 text-green-700 p-2 rounded-md"
-                onClick={() => {
-                  accept = true;
-                  toast.dismiss(t.id);
-                }}
-              >
-                Aceptar
-              </button>
-            </div>
+const handleClearShoppingList = async () => {
+  const confirmAction = () => {
+    return new Promise((resolve) => {
+      toast((t) => (
+        <div className="flex flex-col items-center justify-center gap-5">
+          <p className="text-md">
+            ¿Está seguro que quiere vaciar su lista de la compra?
+          </p>
+          <div className="flex gap-2">
+            <button
+              className="border-2 border-red-700 text-red-700 p-2 rounded-md"
+              onClick={() => {
+                toast.dismiss(t.id);
+                resolve(false); // Cancelar
+              }}
+            >
+              Cancelar
+            </button>
+            <button
+              className="border-2 border-green-700 text-green-700 p-2 rounded-md"
+              onClick={() => {
+                toast.dismiss(t.id);
+                resolve(true); // Aceptar
+              }}
+            >
+              Aceptar
+            </button>
           </div>
-        ));
+        </div>
+      ));
+    });
+  };
 
-        if (accept) {
-          await clearShoppingList();
-          const updatedShoppingList = await getShoppingList();
-          setShoppingList(updatedShoppingList);
-          toast("Se han eliminado todos los productos de la lista");
-        }
-      };
+  const accept = await confirmAction();
+
+  if (accept) {
+    await clearShoppingList();
+    const updatedShoppingList = await getShoppingList();
+    setShoppingList(updatedShoppingList);
+    toast("Se han eliminado todos los productos de la lista");
+  }
+};
+
 
       return (
         <div className="flex flex-row justify-between items-center mb-4">
